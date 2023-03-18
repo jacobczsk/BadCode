@@ -7,7 +7,8 @@ NUMBER - an integer to be processed
 VAR NAMES - how to name the variables (e.g. "BADCODE" => variables "B", "A", ...)
 Arguments:
 -h, --help\t\tDisplay this message and exit
--l, --console-log\tAdd "console.log(num);" at the end of the file`)
+-l, --console-log\tAdd "console.log(num);" at the end of the file
+-n, --no-vars\t\tDon't use variables, write a inline expression instead`)
 } else {
 
     const LETTERS: String = (process.argv[3] === undefined || process.argv[3].startsWith("-") || !Number.isNaN(Number.parseInt(process.argv[3]))) ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : process.argv[3];
@@ -54,32 +55,51 @@ Arguments:
         const negative: boolean = num < 0;
 
         var vars: Array<number> = [];
-
-        var i = 0;
-        factors.forEach(element => {
-            if (vars.indexOf(element) === -1) {
-                vars.push(element);
-                code += `var ${LETTERS[vars.indexOf(element) + 1]} = `;
-                for (let j: number = 0; j < element - 1; j++) {
-                    code += `${LETTERS[0]} + `;
+        if (process.argv.indexOf("-n") != -1 || process.argv.indexOf("--no-vars") != -1) {
+            var i: number = 0;
+            code = `var num = `;
+            factors.forEach(element => {
+                code += `(`;
+                for (let x = 0; x < element; x++) {
+                    code += "! + []";
+                    if (!(x === element - 1)) {
+                        code += ` + `;
+                    }
                 }
-                code += `${LETTERS[0]};\n`;
+                code += `)`;
+                if (i != factors.length - 1) {
+                    code += ` * `;
+                }
                 i++;
-            }
-        });
+            });
 
-        code += `var num = `;
-        if (negative) code += `-`;
-        var left = num;
-        i = 0;
-        factors.forEach(element => {
-            code += `${LETTERS[vars.indexOf(element) + 1]}`;
-            if (!(i == factors.length - 1)) {
-                code += ` * `;
-            }
-            i++;
-        });
-        code += `;`;
+        } else {
+            var i = 0;
+            factors.forEach(element => {
+                if (vars.indexOf(element) === -1) {
+                    vars.push(element);
+                    code += `var ${LETTERS[vars.indexOf(element) + 1]} = `;
+                    for (let j: number = 0; j < element - 1; j++) {
+                        code += `${LETTERS[0]} + `;
+                    }
+                    code += `${LETTERS[0]};\n`;
+                    i++;
+                }
+            });
+
+            code += `var num = `;
+            if (negative) code += `-`;
+            var left = num;
+            i = 0;
+            factors.forEach(element => {
+                code += `${LETTERS[vars.indexOf(element) + 1]}`;
+                if (!(i == factors.length - 1)) {
+                    code += ` * `;
+                }
+                i++;
+            });
+            code += `;`;
+        }
     }
 
     if (process.argv.indexOf("-l") != -1 || process.argv.indexOf("--console-log") != -1) {
