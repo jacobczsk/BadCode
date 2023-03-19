@@ -1,5 +1,5 @@
 if (process.argv.indexOf("-h") != -1 || process.argv.indexOf("--help") != -1) {
-    console.log(`BadCode Number formatter 0.1-alpha1 (pre-release)
+    console.log(`BadCode Number formatter 0.1-alpha2 (pre-release)
 Usage: node ${process.argv[1]} [NUMBER] [VAR NAMES] [OPTIONS]
 Output: JS code, that puts NUMBER into var "num", but without any base10 digit 
 Options:
