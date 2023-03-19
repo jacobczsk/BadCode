@@ -48,7 +48,7 @@ Arguments:
     const num: number = Number.parseInt(process.argv[2]);
 
     if (num == 0) {
-        code = `var ${LETTERS[0]} = [];\nvar num = ${LETTERS[0]};`
+        code = `var num = [];`
     } else {
 
         const factors: Array<number> = factorize(Math.abs(num));
@@ -58,6 +58,9 @@ Arguments:
         if (process.argv.indexOf("-n") != -1 || process.argv.indexOf("--no-vars") != -1) {
             var i: number = 0;
             code = `var num = `;
+            if (negative) {
+                code += `-`;
+            }
             factors.forEach(element => {
                 code += `(`;
                 for (let x = 0; x < element; x++) {
@@ -72,6 +75,7 @@ Arguments:
                 }
                 i++;
             });
+            code += `;`;
 
         } else {
             var i = 0;
